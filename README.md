@@ -6,6 +6,8 @@
 
 ## Introduction
 
+LeetCoTE (LeetCode Training and Evaluation dataset) is a dataset consists of 1700+ Python leetcode problems that can be used for training and evaluation.
+
 ## Data Fields
 
 Consistent with [human-eval](https://github.com/openai/human-eval) problem file format.
@@ -23,6 +25,10 @@ Consistent with [human-eval](https://github.com/openai/human-eval) problem file 
     - `en_question_title`: problem description
     - `en_src`: query
     - `en_tgt`: correct response
+
+## Data Curation
+
+We use [python-leetcode](https://github.com/fspv/python-leetcode) to collect problems and corresponding metadata, then we split problem description into two parts: description without examples and examples, concatenate description without examples and `lang_code` to get query, parse examples to get test case. Finally, extract completion from [doocs/leetcode](https://github.com/doocs/leetcode), test cases and completion are cross verified.
  
 ## Training
   
