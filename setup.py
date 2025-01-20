@@ -19,7 +19,7 @@ setup(
     entry_points={
         "console_scripts": [
             "evaluate_functional_correctness = leetcote.evaluate_functional_correctness",
-            "evaluate = leetcote.evaluate",
+            "eval_lct = leetcote.evaluate:cli",
         ]
     }
 )

@@ -40,7 +40,7 @@ def estimate_pass_at_k(
 def evaluate_functional_correctness(
     sample_file: str,
     problem_file: str,
-    k: List[int] = [1, 10, 20, 100],
+    k: List[int],
     n_workers: int = 4,
     timeout: float = 3.0,
 ):
@@ -108,28 +108,33 @@ def evaluate_functional_correctness(
 
 def evaluate(
         input_file: str, 
-        predict_column='predict',
-        version='v1',
-        split='test'):
+        predict_column: str = 'predict',
+        version: str = 'v1',
+        split: str = 'test',
+        k: str = "1,10,20,100",):
     """
     Evaluate the functional correctness of the LeetCoTE problems.
     """
     # prepare sample file
-    samples = read_jsonl(input_file)
-    for sample in samples:
+    result = []
+    for sample in read_jsonl(input_file):
         text = get_nested(sample, predict_column)
         sample['completion'] = extract_completion(text)
-    write_jsonl(input_file, samples)
+        result.append(sample)
+    assert '.jsonl' in input_file, 'input_file must be a jsonl file'
+    sample_file = input_file.replace('.jsonl', '_sample.jsonl')
+    write_jsonl(sample_file, result)
     
     problem_file = get_problem_file(version, split)
-    
-    print(f'Evaluating {input_file} with {problem_file}...')
-    evaluate_functional_correctness(input_file, problem_file)
+    k = list(map(int, k.split(",")))
+
+    results = evaluate_functional_correctness(sample_file, problem_file, k)
+    print(results)
 
 
-def main():
+def cli():
     fire.Fire(evaluate)
 
 
 if __name__ == '__main__':
-    main()
+    cli()
